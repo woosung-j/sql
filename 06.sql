@@ -141,3 +141,65 @@ on d.last_name = 'Davies'
 and d.hire_date < e.hire_date
 order by 2, 1;
 
+-- 과제] 매니저보다 먼저 입사한 사원들의 이름, 입사일, 매니저명, 매니저입사일을 조회하라.
+select e.last_name 사원, e.hire_date 입사일, 
+       m.last_name 매니저, m.hire_date "매니저 입사일"
+from employees e join employees m
+on m.employee_id = e.manager_id
+and m.hire_date > e.hire_date
+order by 2, 4;
+
+-- inner join
+select e.last_name, e.department_id, d.department_name
+from employees e join departments d
+on e.department_id = d.department_id;
+
+-- outer join 
+-- : department_id 가 없는 Grant도 나온다.
+select e.last_name, e.department_id, d.department_name
+from employees e left outer join departments d
+on e.department_id = d.department_id;
+
+-- : department_id 가 없는 부서 레코드들이 포함이 된다.
+select e.last_name, e.department_id, d.department_name
+from employees e right outer join departments d
+on e.department_id = d.department_id;
+
+-- : 부서가 없는 사원, 사원이 없는 부서가 모두 포함이 된다.
+select e.last_name, e.department_id, d.department_name
+from employees e full outer join departments d
+on e.department_id = d.department_id;
+
+-- 과제] 사원들의 이름, 사번, 매니저명, 매니저의 사번을 조회하라.
+--      King 사장도 테이블에 포함한다.
+select e.last_name 이름, e.employee_id 사번, 
+       m.last_name 매니저명, m.employee_id "매니저 사번"
+from employees e left outer join employees m
+on m.employee_id = e.manager_id;
+
+select d.department_id, d.department_name, d.location_id, l.city
+from departments d, locations l
+where d.location_id = l.location_id
+and d.department_id in (20, 50);
+
+select e.last_name, d.department_name, l.city
+from employees e, departments d, locations l
+where e.department_id = d.department_id
+and d.location_id = l.location_id;
+
+select e.last_name, e.salary, e.job_id
+from employees e, jobs j
+where e.salary between j.min_salary and j.max_salary
+and j.job_id = 'IT_PROG';
+
+select e.last_name, e.department_id, d.department_name
+from employees e, departments d
+where e.department_id(+) = d.department_id; -- right outer join
+
+select e.last_name, e.department_id, d.department_name
+from employees e, departments d
+where e.department_id = d.department_id(+); -- left outer join
+
+select worker.last_name || ' works for ' || manager.last_name
+from employees worker, employees manager
+where worker.manager_id = manager.employee_id;
